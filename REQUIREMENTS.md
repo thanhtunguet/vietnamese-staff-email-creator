@@ -1,43 +1,42 @@
 # Vietnamese Staff Email Creator
 
-This app helps creating staff's email addresses from Excel files for Vietnamese entreprise HRs
+This app helps create staff email addresses from Excel files for Vietnamese enterprise HR departments.
 
-In many Vietnames companies, there's a common naming convention for staff's email addresses: `StaffNameXYZ@example.com`
+In many Vietnamese companies, there's a common naming convention for staff email addresses: `StaffNameXYZ@example.com`
 
-- StaffName: staff's primary name (in most cases it is final word in the fullname)
-- XYZ: the initialism of all the other words in the name.
+- StaffName: the staff member's primary name (in most cases, this is the last word in the full name)
+- XYZ: the initials of all the other words in the name
 
 For example:
 - Pham Thanh Tung => TungPT
 - Tran Thanh Thao => ThaoTT
 - Le Minh Thanh => ThanhLM
 
-Sometimes, HR have to create email addresses in batches. They can use Excel...
-However, not all the HRs have a good template file, not all of them is good at Excel. Besides, Handling Vietnamese name in Excel to remove tone marks is really hard.
+Sometimes, HR departments need to create email addresses in batches. While they can use Excel for this purpose, not all HR professionals have a good template file, and not all of them are proficient with Excel. Additionally, handling Vietnamese names in Excel to remove tone marks is quite challenging.
 
-So this app is made for them, the ones who need them sometimes, to make their life easier.
+This app is designed for HR professionals who occasionally need this functionality, making their work easier and more efficient.
 
-This is the process of converting a Vietnamese name into email address:
+Here is the process for converting a Vietnamese name into an email address:
 
-- Remove all tone marks, lowercase them
-- Put the name (last word) first then put the other words sequently.
-- After removed the tone marks, there may be few names conflict.
-- We add the index to the name.
+- Remove all tone marks and convert to lowercase
+- Put the primary name (last word) first, then add the other words sequentially as initials
+- After removing tone marks, there may be name conflicts
+- Add an index number to resolve conflicts
 
 For example:
 
-- There's a staff with name Tran Phuong Thao => ThaoTP
-- The next person with name Ta Phuong Thao will have the same "username": ThaoTP, so she will have email address "ThaoTP1"
+- A staff member named Tran Phuong Thao becomes ThaoTP
+- The next person named Ta Phuong Thao would have the same "username": ThaoTP, so they will receive the email address "ThaoTP1"
 
-Then we combine the converted name with company domain to have full-qualified email addresses: `thaotp@company.com`
+Finally, we combine the converted name with the company domain to create fully-qualified email addresses: `thaotp@company.com`
 
 # Web UI
 
-- Let users upload Excel file, select the sheet and the column that contains the name.
-- A checkbox "First row is header" to indicate that first row is header, checked by default
-- Process all the names.
-- Add a column next to the name column with the username (local part of email address)
-- Build new workbook and download it to local computer.
+- Allow users to upload an Excel file, select the sheet, and choose the column that contains the names
+- Include a checkbox labeled "First row is header" to indicate that the first row contains headers (checked by default)
+- Process all the names in the selected column
+- Add a new column next to the name column containing the username (local part of the email address)
+- Generate a new workbook and download it to the user's local computer
 
-Web UI should use Ant.design and tailwindCSS.
+The web UI should use Ant Design and Tailwind CSS.
 
