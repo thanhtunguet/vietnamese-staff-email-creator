@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Typography, Space, Card, Tag, Statistic, Row, Col } from 'antd';
 import { DownloadOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons';
-import { processExcelFile, downloadWorkbook, type ProcessingConfig, type EmailProcessingResult } from '../services/excelService';
+import { Button, Card, Col, Row, Space, Statistic, Table, Tag, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
+import { downloadWorkbook, processExcelFile, type EmailProcessingResult, type ProcessingConfig } from '../services/excelService';
 
 const { Title, Text } = Typography;
 
@@ -186,7 +186,7 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
                 setPageSize(size);
               }
             },
-            onShowSizeChange: (current, size) => {
+            onShowSizeChange: (_, size) => {
               setCurrentPage(1); // Reset to first page when page size changes
               setPageSize(size);
             },
