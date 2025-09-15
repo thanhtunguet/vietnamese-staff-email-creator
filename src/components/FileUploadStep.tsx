@@ -76,7 +76,7 @@ const FileUploadStep: React.FC<FileUploadStepProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <Space direction="vertical" size="large" className="w-full">
       <div className="text-center">
         <Title level={3}>Upload Excel File</Title>
         <Text type="secondary">
@@ -116,7 +116,7 @@ const FileUploadStep: React.FC<FileUploadStepProps> = ({
 
       <div className="flex justify-between">
         <div />
-        <Space>
+        <Space size="large">
           <Button 
             type="primary" 
             onClick={onNext}
@@ -153,7 +153,7 @@ const FileUploadStep: React.FC<FileUploadStepProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </Space>
   );
 };
 

@@ -111,7 +111,7 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <Space direction="vertical" size="large" className="w-full">
       <div className="text-center">
         <Title level={3}>Preview & Download</Title>
         <Text type="secondary">
@@ -161,6 +161,7 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
             icon={<ReloadOutlined />}
             onClick={processData}
             loading={loading}
+            size="large"
           >
             Reprocess
           </Button>
@@ -207,7 +208,7 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
 
       {/* Actions */}
       <div className="flex justify-between">
-        <Space>
+        <Space size="large">
           <Button onClick={onPrevious} size="large">
             Previous: Configure Settings
           </Button>
@@ -215,16 +216,18 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
             Start Over
           </Button>
         </Space>
-        <Button
-          type="primary"
-          size="large"
-          icon={<DownloadOutlined />}
-          onClick={handleDownload}
-          loading={downloading}
-          disabled={!processedWorkbook}
-        >
-          Download File
-        </Button>
+        <Space size="large">
+          <Button
+            type="primary"
+            size="large"
+            icon={<DownloadOutlined />}
+            onClick={handleDownload}
+            loading={downloading}
+            disabled={!processedWorkbook}
+          >
+            Download File
+          </Button>
+        </Space>
       </div>
 
       {/* Help Text */}
@@ -240,7 +243,7 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
           </ul>
         </div>
       </Card>
-    </div>
+    </Space>
   );
 };
 

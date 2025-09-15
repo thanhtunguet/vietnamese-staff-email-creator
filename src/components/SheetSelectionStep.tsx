@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Button, Typography, Checkbox, Card, Tag, Divider } from 'antd';
+import { Select, Button, Typography, Checkbox, Card, Tag, Divider, Input, Form, Space } from 'antd';
 import { FileExcelOutlined, TableOutlined } from '@ant-design/icons';
 import { getWorksheetInfo, getColumnHeaders, type ProcessingConfig, type WorksheetInfo, type ColumnInfo } from '../services/excelService';
 import { convertNameToUsername } from '../utils/vietnamese';
@@ -113,7 +113,7 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
   const selectedColumn = columns.find(col => col.index === config.columnIndex);
 
   return (
-    <div className="space-y-6">
+    <Space direction="vertical" size="large" className="w-full">
       <div className="text-center">
         <Title level={3}>Configure Processing Settings</Title>
         <Text type="secondary">
@@ -123,71 +123,77 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
 
       {/* Worksheet Selection */}
       <Card size="small">
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <FileExcelOutlined className="text-blue-500" />
-            <Title level={5} className="mb-0">Select Worksheet</Title>
-          </div>
-          
-          <Select
-            value={config.sheetName}
-            onChange={handleSheetChange}
-            placeholder="Choose a worksheet"
-            className="w-full"
-            size="large"
-          >
-            {worksheets.map(sheet => (
-              <Option key={sheet.name} value={sheet.name}>
-                <div className="flex justify-between items-center">
-                  <span>{sheet.name}</span>
-                  <span className="text-xs text-gray-500">
-                    {sheet.rowCount} rows × {sheet.columnCount} cols
-                  </span>
-                </div>
-              </Option>
-            ))}
-          </Select>
+        <Form layout="vertical">
+          <Form.Item label={
+            <div className="flex items-center space-x-2">
+              <FileExcelOutlined className="text-blue-500" />
+              <span className="ant-typography ant-typography-strong">Select Worksheet</span>
+            </div>
+          }>
+            <Select
+              value={config.sheetName}
+              onChange={handleSheetChange}
+              placeholder="Choose a worksheet"
+              className="w-full"
+              size="large"
+            >
+              {worksheets.map(sheet => (
+                <Option key={sheet.name} value={sheet.name}>
+                  <div className="flex justify-between items-center">
+                    <span>{sheet.name}</span>
+                    <span className="text-xs text-gray-500">
+                      {sheet.rowCount} rows × {sheet.columnCount} cols
+                    </span>
+                  </div>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-          <Checkbox
-            checked={config.hasHeader ?? true}
-            onChange={(e) => handleHeaderChange(e.target.checked)}
-          >
-            First row contains headers
-          </Checkbox>
-        </div>
+          <Form.Item>
+            <Checkbox
+              checked={config.hasHeader ?? true}
+              onChange={(e) => handleHeaderChange(e.target.checked)}
+            >
+              First row contains headers
+            </Checkbox>
+          </Form.Item>
+        </Form>
       </Card>
 
       {/* Column Selection */}
       {config.sheetName && (
         <Card size="small" loading={loading}>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <TableOutlined className="text-green-500" />
-              <Title level={5} className="mb-0">Select Name Column</Title>
-            </div>
-            
-            <Select
-              value={config.columnIndex}
-              onChange={handleColumnChange}
-              placeholder="Choose the column containing staff names"
-              className="w-full"
-              size="large"
-            >
-              {columns.map(column => (
-                <Option key={column.index} value={column.index}>
-                  <div className="space-y-1">
-                    <div className="font-medium">{column.header}</div>
-                    {column.sampleValues.length > 0 && (
-                      <div className="text-xs text-gray-500">
-                        Sample values: {column.sampleValues.slice(0, 3).join(', ')}
-                        {column.sampleValues.length > 3 && '...'}
-                      </div>
-                    )}
-                  </div>
-                </Option>
-              ))}
-            </Select>
-          </div>
+          <Form layout="vertical">
+            <Form.Item label={
+              <div className="flex items-center space-x-2">
+                <TableOutlined className="text-green-500" />
+                <span className="ant-typography ant-typography-strong">Select Name Column</span>
+              </div>
+            }>
+              <Select
+                value={config.columnIndex}
+                onChange={handleColumnChange}
+                placeholder="Choose the column containing staff names"
+                className="w-full"
+                size="large"
+              >
+                {columns.map(column => (
+                  <Option key={column.index} value={column.index}>
+                    <div className="space-y-1">
+                      <div className="font-medium">{column.header}</div>
+                      {column.sampleValues.length > 0 && (
+                        <div className="text-xs text-gray-500">
+                          Sample values: {column.sampleValues.slice(0, 3).join(', ')}
+                          {column.sampleValues.length > 3 && '...'}
+                        </div>
+                      )}
+                    </div>
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Form>
         </Card>
       )}
 
@@ -212,39 +218,42 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
 
       {/* Optional Domain Setting */}
       <Card size="small">
-        <div className="space-y-4">
-          <Title level={5} className="mb-0">Email Domain (Optional)</Title>
-          <div className="space-y-2">
-            <input
-              type="text"
+        <Form layout="vertical">
+          <Form.Item label="Email Domain (Optional)">
+            <Input
               placeholder="company.com"
               value={config.domain || ''}
               onChange={(e) => handleDomainChange(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              size="large"
+              allowClear
             />
-            <Text type="secondary" className="text-xs">
-              If provided, full email addresses will be generated (e.g., tungpt@company.com)
-            </Text>
-          </div>
-        </div>
+          </Form.Item>
+          <Text type="secondary" className="text-xs">
+            If provided, full email addresses will be generated (e.g., tungpt@company.com)
+          </Text>
+        </Form>
       </Card>
 
       <Divider />
 
       <div className="flex justify-between">
-        <Button onClick={onPrevious} size="large">
-          Previous: Upload File
-        </Button>
-        <Button 
-          type="primary" 
-          onClick={onNext}
-          disabled={!isConfigValid()}
-          size="large"
-        >
-          Next: Preview & Process
-        </Button>
+        <Space size="large">
+          <Button onClick={onPrevious} size="large">
+            Previous: Upload File
+          </Button>
+        </Space>
+        <Space size="large">
+          <Button 
+            type="primary" 
+            onClick={onNext}
+            disabled={!isConfigValid()}
+            size="large"
+          >
+            Next: Preview & Process
+          </Button>
+        </Space>
       </div>
-    </div>
+    </Space>
   );
 };
 
