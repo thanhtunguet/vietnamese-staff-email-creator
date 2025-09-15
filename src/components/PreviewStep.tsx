@@ -206,10 +206,11 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
 
       {/* Actions */}
       <div className="flex justify-between">
-        <Space size="large">
+        <Space size="large" className="mr-2">
           <Button onClick={onPrevious} size="large">
             Previous: Configure Settings
           </Button>
+          <span className="mx-2"></span>
           <Button onClick={onReset} size="large">
             Start Over
           </Button>

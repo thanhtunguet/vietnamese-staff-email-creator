@@ -242,6 +242,7 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
             Previous: Upload File
           </Button>
         </Space>
+        <span className="mx-2"></span>
         <Space size="large">
           <Button 
             type="primary" 

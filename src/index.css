@@ -35,3 +35,12 @@ body {
   font-size: 1.125rem;
   color: #595959;
 }
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
