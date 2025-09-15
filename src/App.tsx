@@ -1,4 +1,3 @@
-import React from 'react';
 import EmailCreator from './components/EmailCreator';
 
 function App() {

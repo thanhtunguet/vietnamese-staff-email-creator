@@ -2,7 +2,7 @@
  * Test utilities for Vietnamese name processing
  */
 
-import { convertNameToUsername, generateUniqueUsernames, removeToneMarks } from './vietnamese';
+import { convertNameToUsername, generateUniqueUsernames } from './vietnamese';
 
 // Test cases from requirements
 export const TEST_CASES = [

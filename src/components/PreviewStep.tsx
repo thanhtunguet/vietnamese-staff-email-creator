@@ -8,7 +8,6 @@ const { Title, Text } = Typography;
 
 interface PreviewStepProps {
   file: File;
-  workbook: XLSX.WorkBook;
   config: ProcessingConfig;
   processedData: EmailProcessingResult[];
   onProcessedDataChange: (data: EmailProcessingResult[]) => void;
@@ -19,7 +18,6 @@ interface PreviewStepProps {
 
 const PreviewStep: React.FC<PreviewStepProps> = ({
   file,
-  workbook,
   config,
   processedData,
   onProcessedDataChange,

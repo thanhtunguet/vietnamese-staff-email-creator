@@ -104,10 +104,9 @@ const EmailCreator: React.FC = () => {
           />
         )}
 
-        {state.currentStep === 2 && state.file && state.workbook && (
+        {state.currentStep === 2 && state.file && (
           <PreviewStep
             file={state.file}
-            workbook={state.workbook}
             config={state.config as ProcessingConfig}
             processedData={state.processedData}
             onProcessedDataChange={(data) => updateState({ processedData: data })}
