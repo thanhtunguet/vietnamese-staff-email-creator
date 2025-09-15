@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Button, Typography, Space, Checkbox, Card, Tag, Divider } from 'antd';
+import { Select, Button, Typography, Checkbox, Card, Tag, Divider } from 'antd';
 import { FileExcelOutlined, TableOutlined } from '@ant-design/icons';
-import { getWorksheetInfo, getColumnInfo, type ProcessingConfig, type WorksheetInfo, type ColumnInfo } from '../services/excelService';
+import { getWorksheetInfo, getColumnHeaders, type ProcessingConfig, type WorksheetInfo, type ColumnInfo } from '../services/excelService';
 import { convertNameToUsername } from '../utils/vietnamese';
 import * as XLSX from 'xlsx';
 
@@ -57,7 +57,8 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
   const loadColumns = async (sheetName: string, hasHeader: boolean) => {
     try {
       setLoading(true);
-      const columnInfo = getColumnInfo(workbook, sheetName, hasHeader);
+      // Lightweight: read only headers to avoid loading all rows
+      const columnInfo = getColumnHeaders(workbook, sheetName, hasHeader);
       setColumns(columnInfo);
       
       // Auto-select column if there's a likely name column
@@ -84,6 +85,7 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
     onConfigChange({ 
       ...config, 
       sheetName,
+      hasHeader: config.hasHeader ?? true,
       columnIndex: undefined // Reset column selection
     });
   };
@@ -105,9 +107,7 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
   };
 
   const isConfigValid = () => {
-    return config.sheetName && 
-           config.columnIndex !== undefined && 
-           config.hasHeader !== undefined;
+    return Boolean(config.sheetName) && config.columnIndex !== undefined;
   };
 
   const selectedColumn = columns.find(col => col.index === config.columnIndex);
@@ -177,10 +177,12 @@ const SheetSelectionStep: React.FC<SheetSelectionStepProps> = ({
                 <Option key={column.index} value={column.index}>
                   <div className="space-y-1">
                     <div className="font-medium">{column.header}</div>
-                    <div className="text-xs text-gray-500">
-                      Sample values: {column.sampleValues.slice(0, 3).join(', ')}
-                      {column.sampleValues.length > 3 && '...'}
-                    </div>
+                    {column.sampleValues.length > 0 && (
+                      <div className="text-xs text-gray-500">
+                        Sample values: {column.sampleValues.slice(0, 3).join(', ')}
+                        {column.sampleValues.length > 3 && '...'}
+                      </div>
+                    )}
                   </div>
                 </Option>
               ))}

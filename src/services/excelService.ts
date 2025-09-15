@@ -3,7 +3,9 @@
  */
 
 import * as XLSX from 'xlsx';
-import { EmailProcessingResult, processNamesToEmails } from './emailService';
+import type { EmailProcessingResult } from './emailService';
+import { processNamesToEmails } from './emailService';
+export type { EmailProcessingResult } from './emailService';
 
 export interface WorksheetInfo {
   name: string;
@@ -57,16 +59,53 @@ export async function readExcelFile(file: File): Promise<XLSX.WorkBook> {
  * @returns Array of worksheet information
  */
 export function getWorksheetInfo(workbook: XLSX.WorkBook): WorksheetInfo[] {
+  // Lightweight: use sheet range without loading all rows
   return workbook.SheetNames.map(sheetName => {
     const worksheet = workbook.Sheets[sheetName];
-    const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
-    
+    const ref = worksheet['!ref'] || 'A1';
+    const range = XLSX.utils.decode_range(ref);
     return {
       name: sheetName,
       rowCount: range.e.r + 1,
-      columnCount: range.e.c + 1
+      columnCount: range.e.c + 1,
     };
   });
+}
+
+/**
+ * Get only column headers without loading all rows.
+ * Returns ColumnInfo entries with empty sampleValues to avoid heavy reads.
+ */
+export function getColumnHeaders(
+  workbook: XLSX.WorkBook,
+  sheetName: string,
+  hasHeader: boolean = true
+): ColumnInfo[] {
+  const worksheet = workbook.Sheets[sheetName];
+  if (!worksheet) {
+    throw new Error(`Worksheet "${sheetName}" not found`);
+  }
+
+  const ref = worksheet['!ref'] || 'A1';
+  const full = XLSX.utils.decode_range(ref);
+  // Range covering only the first row (row index 0)
+  const headerRange = { s: { r: 0, c: 0 }, e: { r: 0, c: full.e.c } };
+  const headerAoa = XLSX.utils.sheet_to_json(worksheet, {
+    header: 1,
+    raw: false,
+    blankrows: false,
+    range: headerRange as any,
+  }) as string[][];
+
+  const headerRow = (hasHeader ? headerAoa[0] : []) || [];
+  const maxColumns = headerRow.length || (full.e.c + 1);
+
+  const columns: ColumnInfo[] = [];
+  for (let i = 0; i < maxColumns; i++) {
+    const header = hasHeader ? (headerRow[i] || `Column ${i + 1}`) : `Column ${i + 1}`;
+    columns.push({ index: i, header, sampleValues: [] });
+  }
+  return columns;
 }
 
 /**
@@ -86,7 +125,11 @@ export function getColumnInfo(
     throw new Error(`Worksheet "${sheetName}" not found`);
   }
   
-  const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }) as string[][];
+  const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+    header: 1,
+    raw: false,
+    blankrows: false,
+  }) as string[][];
   
   if (jsonData.length === 0) {
     return [];
@@ -139,7 +182,11 @@ export function extractNamesFromColumn(
     throw new Error(`Worksheet "${sheetName}" not found`);
   }
   
-  const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }) as string[][];
+  const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+    header: 1,
+    raw: false,
+    blankrows: false,
+  }) as string[][];
   
   if (jsonData.length === 0) {
     return [];
@@ -165,7 +212,11 @@ export function createProcessedWorkbook(
   processedData: EmailProcessingResult[]
 ): XLSX.WorkBook {
   const worksheet = originalWorkbook.Sheets[config.sheetName];
-  const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }) as any[][];
+  const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+    header: 1,
+    raw: false,
+    blankrows: false,
+  }) as any[][];
   
   if (jsonData.length === 0) {
     throw new Error('No data found in worksheet');

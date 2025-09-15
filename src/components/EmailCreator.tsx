@@ -20,7 +20,7 @@ const EmailCreator: React.FC = () => {
     currentStep: 0,
     file: null,
     workbook: null,
-    config: {},
+    config: { hasHeader: true },
     processedData: [],
     error: null
   });
@@ -42,7 +42,7 @@ const EmailCreator: React.FC = () => {
       currentStep: 0,
       file: null,
       workbook: null,
-      config: {},
+      config: { hasHeader: true },
       processedData: [],
       error: null
     });
