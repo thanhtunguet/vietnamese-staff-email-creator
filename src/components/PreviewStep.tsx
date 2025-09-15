@@ -28,6 +28,8 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
   const [loading, setLoading] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [processedWorkbook, setProcessedWorkbook] = useState<XLSX.WorkBook | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     processData();
@@ -170,12 +172,27 @@ const PreviewStep: React.FC<PreviewStepProps> = ({
           dataSource={processedData.map((item, index) => ({ ...item, key: index }))}
           loading={loading}
           pagination={{
-            pageSize: 10,
+            current: currentPage,
+            pageSize: pageSize,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            pageSizeOptions: ['10', '20', '50', '100'],
+            showTotal: (total, range) => 
+              `${range[0]}-${range[1]} of ${total} items`,
+            size: 'default',
+            onChange: (page, size) => {
+              setCurrentPage(page);
+              if (size !== pageSize) {
+                setPageSize(size);
+              }
+            },
+            onShowSizeChange: (current, size) => {
+              setCurrentPage(1); // Reset to first page when page size changes
+              setPageSize(size);
+            },
           }}
           scroll={{ y: 400 }}
+          size="middle"
         />
       </Card>
 
